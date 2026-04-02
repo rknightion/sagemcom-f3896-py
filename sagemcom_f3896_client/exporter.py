@@ -238,6 +238,15 @@ class Exporter:
                     "mac": state.mac_address,
                     "serial": state.serial_number,
                     "boot_file_name": state.boot_file_name,
+                    "docsis_version": state.docsis_version,
+                    "status": state.status,
+                    "max_cpes": str(state.max_cpes),
+                    "access_allowed": str(state.access_allowed).lower(),
+                    "baseline_privacy_enabled": str(
+                        state.baseline_privacy_enabled
+                    ).lower(),
+                    "provisioning_mode": provisioning.provisioning_mode,
+                    "ds_lite_enabled": str(provisioning.ds_lite_enabled).lower(),
                 }
                 if system_info:
                     info_labels["software_version"] = system_info.software_version
