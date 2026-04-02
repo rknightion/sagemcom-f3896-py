@@ -23,10 +23,7 @@ from sagemcom_f3896_client.log_parser import (
 from sagemcom_f3896_client.models import (
     EventLogItem,
     ModemDownstreamChannelResult,
-    ModemModeResult,
     ModemUpstreamChannelResult,
-    RegistrationResult,
-    SoftwareUpdateResult,
 )
 from sagemcom_f3896_client.profile_messages import ProfileMessageStore
 
