@@ -179,3 +179,38 @@ async def test_system_provisioning(
     provision_status = await client.system_provisioning()
     assert provision_status.provisioning_mode == "disable"
     assert len(list(filter(":".__eq__, provision_status.mac_address))) == 5
+
+
+@requires_modem_password()
+@pytest.mark.asyncio
+async def test_modem_registration(
+    client: SagemcomModemSessionClient, caplog: LogCaptureFixture
+):
+    caplog.set_level(logging.DEBUG)
+
+    registration = await client.modem_registration()
+    assert isinstance(registration.registration_complete, bool)
+    assert isinstance(registration.downstream_locked, bool)
+
+
+@requires_modem_password()
+@pytest.mark.asyncio
+async def test_modem_software_update(
+    client: SagemcomModemSessionClient, caplog: LogCaptureFixture
+):
+    caplog.set_level(logging.DEBUG)
+
+    software_update = await client.modem_software_update()
+    assert isinstance(software_update.status, str)
+    assert len(software_update.status) > 0
+
+
+@requires_modem_password()
+@pytest.mark.asyncio
+async def test_modem_mode(
+    client: SagemcomModemSessionClient, caplog: LogCaptureFixture
+):
+    caplog.set_level(logging.DEBUG)
+
+    modem_mode = await client.modem_mode()
+    assert isinstance(modem_mode.enabled, bool)
