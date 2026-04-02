@@ -54,7 +54,7 @@ def index_template(logs: List[EventLogItem]) -> str:
                 </table>
                 </p>
                 <p>
-                    <small>F3896 exporter <a href="https://github.com/ties/sagemcom-f3896-py">github.com/ties/sagemcom-f3896-py</a></small>
+                    <small>F3896 exporter <a href="https://github.com/rknightion/sagemcom-f3896-py">github.com/rknightion/sagemcom-f3896-py</a></small>
                 </p>
             </body>
         </html>"""

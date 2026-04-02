@@ -1,5 +1,3 @@
-[![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/sincze)
-
 # Sagemcom F3896 client
 
 A client for the Sagemcom F3896 modem. (Works with ZIGGO Modems that now require HTTPS)
@@ -69,7 +67,7 @@ version: '3.7'
 
 services:
   sagemcom_exporter:
-    image: ghcr.io/ties/sagemcom-f3896-py:latest
+    image: ghcr.io/rknightion/sagemcom-f3896-py:latest
     deploy:
       resources:
         limits:
@@ -80,7 +78,7 @@ services:
       - 8080:8080
     environment:
       MODEM_PASSWORD: PASSWORD123
-      MODEM_URL: http://192.168.100.1
+      MODEM_URL: https://192.168.100.1
 ```
 
 ## Endpoints
