@@ -145,6 +145,36 @@ class Exporter:
                 "Node boot time, in unixtime (shifts when clocks between host and modem skew more than 10s).",
                 registry=registry,
             )
+            metric_service_flow_max_traffic_rate = Gauge(
+                "modem_service_flow_max_traffic_rate",
+                "Provisioned max traffic rate in bps",
+                ["direction", "flow_id"],
+                registry=registry,
+            )
+            metric_service_flow_max_traffic_burst = Gauge(
+                "modem_service_flow_max_traffic_burst",
+                "Max traffic burst in bytes",
+                ["direction", "flow_id"],
+                registry=registry,
+            )
+            metric_service_flow_min_reserved_rate = Gauge(
+                "modem_service_flow_min_reserved_rate",
+                "Min reserved rate in bps",
+                ["direction", "flow_id"],
+                registry=registry,
+            )
+            metric_service_flow_max_concatenated_burst = Gauge(
+                "modem_service_flow_max_concatenated_burst",
+                "Max concatenated burst in bytes",
+                ["direction", "flow_id"],
+                registry=registry,
+            )
+            metric_service_flow_info = Info(
+                "modem_service_flow",
+                "Service flow information",
+                ["direction", "flow_id"],
+                registry=registry,
+            )
 
             # gather metrics in parallel
             try:
@@ -159,11 +189,12 @@ class Exporter:
                     LOG.debug("system_info unavailable (requires auth), skipping")
                     system_info = None
 
-                state, _, _, _ = await asyncio.gather(
+                state, _, _, _, service_flows = await asyncio.gather(
                     self.client.system_state(),
                     self.__update_downstream_channel_metrics(registry),
                     self.__update_upstream_channel_metrics(registry),
                     self.__log_based_metrics(registry),
+                    self.client.modem_service_flows(),
                 )
 
                 info_labels = {
@@ -187,6 +218,27 @@ class Exporter:
                 # the metrics in the registry get re-created every time => set
                 # the value every time.
                 metric_node_boot_time.set(self.__last_boot_time)
+
+                for sf in service_flows:
+                    labels = {
+                        "direction": sf.direction,
+                        "flow_id": str(sf.id),
+                    }
+                    metric_service_flow_max_traffic_rate.labels(**labels).set(
+                        sf.max_traffic_rate
+                    )
+                    metric_service_flow_max_traffic_burst.labels(**labels).set(
+                        sf.max_traffic_burst
+                    )
+                    metric_service_flow_min_reserved_rate.labels(**labels).set(
+                        sf.min_reserved_rate
+                    )
+                    metric_service_flow_max_concatenated_burst.labels(**labels).set(
+                        sf.max_concatenated_burst
+                    )
+                    metric_service_flow_info.labels(**labels).info(
+                        {"schedule_type": sf.schedule_type}
+                    )
 
                 MODEM_UPDATE_COUNT.labels(status="success").inc()
                 MODEM_LAST_UPDATE.labels(status="success").set_to_current_time()
