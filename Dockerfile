@@ -1,4 +1,4 @@
-FROM python:3.13-alpine AS builder
+FROM python:3.14-alpine AS builder
 
 WORKDIR /usr/src/app
 
@@ -8,7 +8,7 @@ COPY sagemcom_f3896_client/ sagemcom_f3896_client/
 RUN pip install --no-cache-dir uv \
     && uv sync --frozen --no-dev --no-editable
 
-FROM python:3.13-alpine
+FROM python:3.14-alpine
 
 WORKDIR /usr/src/app
 
