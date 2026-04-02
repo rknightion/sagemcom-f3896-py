@@ -2,35 +2,35 @@
 name = "sagemcom-f3896-client"
 version = "0.6.2"
 description = "Sagemcom F3896 exporter"
-authors = ["Ties de Kock <ties@tiesdekock.nl>"]
+authors = [{ name = "Ties de Kock", email = "ties@tiesdekock.nl" }]
 readme = "README.md"
-# This ensures poetry finds your code even if it's in the root or a src folder
-packages = [{include = "sagemcom_f3896_client"}]
+requires-python = ">=3.10"
+dependencies = [
+    "click>=8.1.7,<9",
+    "aiohttp>=3.9.4,<4",
+    "prometheus-async[aiohttp]>=22.2.0,<23",
+]
 
-[tool.poetry.dependencies]
-python = "^3.10"
-click = "^8.1.7"
-aiohttp = "^3.9.4"
-prometheus-async = {extras = ["aiohttp"], version = "^22.2.0" }
-
-[tool.poetry.scripts]
+[project.scripts]
 f3896-cli = "sagemcom_f3896_client.cli:cli"
 
-[tool.poetry.group.dev.dependencies]
-pre-commit = "^3.7.1"
-flake8 = "^7.0.0"
-black = "^24.4.0"
-pytest = "^8.1.1"
-pytest-asyncio = "^0.23.5"
-twine = "^5.0.0"
-check-manifest = "^0.49"
-pytest-cov = "^4.1.0"
-pytest-xdist = "^3.6.1"
-ruff = "^0.3.7"
+[dependency-groups]
+dev = [
+    "pre-commit>=3.7.1,<4",
+    "flake8>=7.0.0,<8",
+    "black>=24.4.0,<25",
+    "pytest>=8.1.1,<9",
+    "pytest-asyncio>=0.23.5,<1",
+    "twine>=5.0.0,<6",
+    "check-manifest>=0.49,<1",
+    "pytest-cov>=4.1.0,<5",
+    "pytest-xdist>=3.6.1,<4",
+    "ruff>=0.3.7,<1",
+]
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [tool.black]
 target-version = ["py310"]

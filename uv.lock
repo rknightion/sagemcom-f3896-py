@@ -1592,7 +1592,7 @@ wheels = [
 
 [[package]]
 name = "sagemcom-f3896-client"
-version = "0.6.1"
+version = "0.6.2"
 source = { editable = "." }
 dependencies = [
     { name = "aiohttp" },

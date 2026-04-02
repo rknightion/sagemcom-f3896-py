@@ -95,7 +95,7 @@ class ModemDownstreamChannelResult:
     frequency: float
     rx_mer: int
     power: float
-    lock_status: Literal["locked", "unlocked"]
+    lock_status: bool
     corrected_errors: int
     uncorrected_errors: int
 
@@ -108,6 +108,7 @@ class ModemQAMDownstreamChannelResult(ModemDownstreamChannelResult):
 
     @staticmethod
     def build(elem: Dict[str, str]) -> "ModemQAMDownstreamChannelResult":
+        lock = elem["lockStatus"]
         return ModemQAMDownstreamChannelResult(
             channel_type=elem["channelType"],
             channel_id=elem["channelId"],
@@ -118,7 +119,7 @@ class ModemQAMDownstreamChannelResult(ModemDownstreamChannelResult):
             rx_mer=elem["rxMer"],
             corrected_errors=elem["correctedErrors"],
             uncorrected_errors=elem["uncorrectedErrors"],
-            lock_status=elem["lockStatus"],
+            lock_status=lock if isinstance(lock, bool) else lock == "locked",
         )
 
 
@@ -133,6 +134,7 @@ class ModemOFDMDownstreamChannelResult(ModemDownstreamChannelResult):
 
     @staticmethod
     def build(elem: Dict[str, str]) -> "ModemOFDMDownstreamChannelResult":
+        lock = elem["lockStatus"]
         return ModemOFDMDownstreamChannelResult(
             channel_type=elem["channelType"],
             channel_id=elem["channelId"],
@@ -142,7 +144,7 @@ class ModemOFDMDownstreamChannelResult(ModemDownstreamChannelResult):
             number_of_active_subcarriers=elem["numberOfActiveSubCarriers"],
             modulation=elem["modulation"],
             frequency=elem["firstActiveSubcarrier"] * 1_000_000,
-            lock_status=elem["lockStatus"],
+            lock_status=lock if isinstance(lock, bool) else lock == "locked",
             rx_mer=elem["rxMer"] / 10.0,
             power=elem["power"] / 10.0,
             corrected_errors=elem["correctedErrors"],
@@ -225,6 +227,7 @@ class ModemServiceFlowResult:
     schedule_type: Literal[
         "undefined",
         "bestEffort",
+        "best_effort",
         "nonRealTimePollingService",
         "realTimePollingService",
         "unsolicitedGrantService",

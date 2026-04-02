@@ -148,23 +148,34 @@ class Exporter:
 
             # gather metrics in parallel
             try:
-                state, system_info, _, _, _ = await asyncio.gather(
+                # system_info requires auth and may fail without a password
+                try:
+                    system_info = await self.client.system_info()
+                except (
+                    aiohttp.ClientResponseError,
+                    LoginFailedException,
+                    AssertionError,
+                ):
+                    LOG.debug("system_info unavailable (requires auth), skipping")
+                    system_info = None
+
+                state, _, _, _ = await asyncio.gather(
                     self.client.system_state(),
-                    self.client.system_info(),
                     self.__update_downstream_channel_metrics(registry),
                     self.__update_upstream_channel_metrics(registry),
                     self.__log_based_metrics(registry),
                 )
 
-                metric_modem_info.info(
-                    {
-                        "mac": state.mac_address,
-                        "serial": state.serial_number,
-                        "software_version": system_info.software_version,
-                        "hardware_version": system_info.hardware_version,
-                        "boot_file_name": state.boot_file_name,
-                    }
-                )
+                info_labels = {
+                    "mac": state.mac_address,
+                    "serial": state.serial_number,
+                    "boot_file_name": state.boot_file_name,
+                }
+                if system_info:
+                    info_labels["software_version"] = system_info.software_version
+                    info_labels["hardware_version"] = system_info.hardware_version
+
+                metric_modem_info.info(info_labels)
 
                 metric_modem_uptime.set(state.up_time)
 
@@ -372,7 +383,7 @@ class Exporter:
             metric_downstream_locked.labels(
                 channel=ch.channel_id,
                 channel_type=ch.channel_type,
-            ).set(ch.lock_status)
+            ).set(1 if ch.lock_status else 0)
 
             metric_downstream_errors.labels(
                 channel=ch.channel_id,
@@ -550,7 +561,7 @@ class Exporter:
 @click.option(
     "-u",
     "--base-url",
-    default=os.environ.get("MODEM_URL", "http://192.168.100.1"),
+    default=os.environ.get("MODEM_URL", "https://192.168.100.1"),
     help="URL to modem - default from MODEM_URL",
 )
 @click.option("--include-login-messages", is_flag=True, default=False)

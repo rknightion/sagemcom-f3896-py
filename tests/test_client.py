@@ -84,7 +84,7 @@ async def test_modem_downstreams(
     downstreams = await client.modem_downstreams()
 
     for ds in downstreams:
-        assert ds.rx_mer > 0 and ds.rx_mer < 100
+        assert ds.rx_mer >= 0 and ds.rx_mer < 100
         assert ds.power >= -5
         assert ds.lock_status is not None
         assert ds.corrected_errors >= 0

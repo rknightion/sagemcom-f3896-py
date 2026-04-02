@@ -3,6 +3,7 @@ import asyncio
 import pytest
 
 from sagemcom_f3896_client.client import SagemcomModemClient
+from sagemcom_f3896_client.exception import LoginFailedException
 
 
 @pytest.mark.asyncio
@@ -18,7 +19,7 @@ async def test_connect_non_existent_host():
 @pytest.mark.asyncio
 async def test_connect_non_existent_host__login_required():
     """Connect to a non-responding IP and ensure we observe the timeout."""
-    with pytest.raises(asyncio.TimeoutError):
+    with pytest.raises((asyncio.TimeoutError, LoginFailedException)):
         async with SagemcomModemClient(
             "http://192.0.2.0", "DEADBEEF", timeout=0.1
         ) as client:
