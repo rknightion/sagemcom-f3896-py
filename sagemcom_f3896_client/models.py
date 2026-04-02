@@ -275,3 +275,38 @@ class SystemProvisioningResponse:
             mac_address=body["provisioning"]["macAddress"],
             ds_lite_enabled=body["provisioning"]["dsLite"]["enable"],
         )
+
+
+@dataclass
+class RegistrationResult:
+    registration_complete: bool
+    downstream_locked: bool
+
+    @staticmethod
+    def build(body: Dict[str, str]) -> "RegistrationResult":
+        return RegistrationResult(
+            registration_complete=body["registration"]["registrationComplete"],
+            downstream_locked=body["registration"]["downstreamLocked"],
+        )
+
+
+@dataclass
+class SoftwareUpdateResult:
+    status: str
+
+    @staticmethod
+    def build(body: Dict[str, str]) -> "SoftwareUpdateResult":
+        return SoftwareUpdateResult(
+            status=body["softwareUpdate"]["status"],
+        )
+
+
+@dataclass
+class ModemModeResult:
+    enabled: bool
+
+    @staticmethod
+    def build(body: Dict[str, str]) -> "ModemModeResult":
+        return ModemModeResult(
+            enabled=body["modemmode"]["enable"],
+        )
