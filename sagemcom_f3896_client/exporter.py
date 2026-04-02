@@ -2,7 +2,12 @@ import asyncio
 import logging
 import os
 import time
+import warnings
 from typing import List, Set
+
+# prometheus_async's Twisted module has 'return' in 'finally' blocks that
+# trigger SyntaxWarning on Python 3.14+. We only use the aiohttp side.
+warnings.filterwarnings("ignore", message="'return' in a 'finally' block")
 
 import aiohttp
 import click
