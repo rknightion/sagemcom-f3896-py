@@ -49,7 +49,7 @@ def index_template(logs: List[EventLogItem]) -> str:
                     <tr><td>Time</td><td>Priority</td><td>Message</td></tr>
                     </thread>
                     <tbody>
-                    {''.join(list(format_log_entries(logs)))}
+                    {"".join(list(format_log_entries(logs)))}
                     </tbody>
                 </table>
                 </p>

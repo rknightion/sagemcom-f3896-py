@@ -34,7 +34,7 @@ async def print_downstreams():
                 case "ofdm":
                     click.echo(
                         click.style(f"{ch.channel_type:<6}", fg="green")
-                        + f" {ch.channel_id:>3} {ch.frequency:>8} {ch.power:>4} {ch.channel_width:>9} {ch.modulation:>8} {ch.rx_mer:>4} {lock_status :>8} {ch.fft_type:>3} {ch.number_of_active_subcarriers:>4} {ch.corrected_errors:>10} {ch.uncorrected_errors:>3}"
+                        + f" {ch.channel_id:>3} {ch.frequency:>8} {ch.power:>4} {ch.channel_width:>9} {ch.modulation:>8} {ch.rx_mer:>4} {lock_status:>8} {ch.fft_type:>3} {ch.number_of_active_subcarriers:>4} {ch.corrected_errors:>10} {ch.uncorrected_errors:>3}"
                     )
 
 

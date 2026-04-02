@@ -32,13 +32,13 @@ class ProfileMessageStore:
         removed = []
         for message in list(self._messages):
             match message:
-                case DownstreamProfileMessage(
-                    channel_id=channel_id
-                ) if channel_id not in ds_channels_ids:
+                case DownstreamProfileMessage(channel_id=channel_id) if (
+                    channel_id not in ds_channels_ids
+                ):
                     removed.append(message)
-                case UpstreamProfileMessage(
-                    channel_id=channel_id
-                ) if channel_id not in us_channel_ids:
+                case UpstreamProfileMessage(channel_id=channel_id) if (
+                    channel_id not in us_channel_ids
+                ):
                     removed.append(message)
 
         # do not remove while iterating

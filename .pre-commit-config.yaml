@@ -1,23 +1,7 @@
-# See https://pre-commit.com for more information
-# See https://pre-commit.com/hooks.html for more hooks
 repos:
-  - repo: https://github.com/psf/black-pre-commit-mirror
-    rev: 24.8.0
-    hooks:
-      - id: black
-        language_version: python3.11
-  -   repo: https://github.com/pycqa/flake8
-      rev: 7.1.1
-      hooks:
-      -   id: flake8
-  - repo: https://github.com/pycqa/isort
-    rev: 5.13.2
-    hooks:
-      - id: isort
-        name: isort (python)
-        additional_dependencies: [toml]
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    # Ruff version.
-    rev: v0.6.2
+    rev: v0.11.4
     hooks:
       - id: ruff
+        args: [--fix]
+      - id: ruff-format

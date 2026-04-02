@@ -1,25 +1,26 @@
-FROM python:3.15-rc-alpine3.22
+FROM python:3.13-alpine AS builder
 
 WORKDIR /usr/src/app
 
-ENV PIP_ROOT_USER_ACTION=ignore \
+COPY pyproject.toml README.md uv.lock ./
+COPY sagemcom_f3896_client/ sagemcom_f3896_client/
+
+RUN pip install --no-cache-dir uv \
+    && uv sync --frozen --no-dev --no-editable
+
+FROM python:3.13-alpine
+
+WORKDIR /usr/src/app
+
+RUN addgroup -S app && adduser -S app -G app
+
+COPY --from=builder /usr/src/app/.venv /usr/src/app/.venv
+
+ENV PATH="/usr/src/app/.venv/bin:$PATH" \
     PYTHONUNBUFFERED=1
 
-# 1. Copy the dependency files
-COPY pyproject.toml README.md ./
-
-# 2. Install ONLY the dependencies listed in the TOML
-# We use 'poetry export' or just pip install the specific requirements
-# to avoid the "empty element" error.
-RUN pip install --no-cache-dir click aiohttp "prometheus-async[aiohttp]"
-
-# 3. Now copy the rest of your source code
-COPY . .
-
-# 4. Install the current project without dependencies
-# (This links your 'f3896-cli' command)
-RUN pip install --no-cache-dir --no-deps .
-
 EXPOSE 8080
+
+USER app
 
 CMD ["python", "-m", "sagemcom_f3896_client.exporter", "-v"]
