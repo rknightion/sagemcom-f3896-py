@@ -23,7 +23,10 @@ from sagemcom_f3896_client.log_parser import (
 from sagemcom_f3896_client.models import (
     EventLogItem,
     ModemDownstreamChannelResult,
+    ModemModeResult,
     ModemUpstreamChannelResult,
+    RegistrationResult,
+    SoftwareUpdateResult,
 )
 from sagemcom_f3896_client.profile_messages import ProfileMessageStore
 
@@ -175,6 +178,26 @@ class Exporter:
                 ["direction", "flow_id"],
                 registry=registry,
             )
+            metric_registration_complete = Gauge(
+                "modem_registration_complete",
+                "1 if DOCSIS registration complete",
+                registry=registry,
+            )
+            metric_downstream_registration_locked = Gauge(
+                "modem_downstream_registration_locked",
+                "1 if downstream locked",
+                registry=registry,
+            )
+            metric_software_update_info = Info(
+                "modem_software_update",
+                "Software update status",
+                registry=registry,
+            )
+            metric_modem_mode_enabled = Gauge(
+                "modem_mode_enabled",
+                "1 if modem mode enabled",
+                registry=registry,
+            )
 
             # gather metrics in parallel
             try:
@@ -189,12 +212,26 @@ class Exporter:
                     LOG.debug("system_info unavailable (requires auth), skipping")
                     system_info = None
 
-                state, _, _, _, service_flows = await asyncio.gather(
+                (
+                    state,
+                    _,
+                    _,
+                    _,
+                    service_flows,
+                    registration,
+                    software_update,
+                    modem_mode,
+                    provisioning,
+                ) = await asyncio.gather(
                     self.client.system_state(),
                     self.__update_downstream_channel_metrics(registry),
                     self.__update_upstream_channel_metrics(registry),
                     self.__log_based_metrics(registry),
                     self.client.modem_service_flows(),
+                    self.client.modem_registration(),
+                    self.client.modem_software_update(),
+                    self.client.modem_mode(),
+                    self.client.system_provisioning(),
                 )
 
                 info_labels = {
@@ -239,6 +276,15 @@ class Exporter:
                     metric_service_flow_info.labels(**labels).info(
                         {"schedule_type": sf.schedule_type}
                     )
+
+                metric_registration_complete.set(
+                    1 if registration.registration_complete else 0
+                )
+                metric_downstream_registration_locked.set(
+                    1 if registration.downstream_locked else 0
+                )
+                metric_software_update_info.info({"status": software_update.status})
+                metric_modem_mode_enabled.set(1 if modem_mode.enabled else 0)
 
                 MODEM_UPDATE_COUNT.labels(status="success").inc()
                 MODEM_LAST_UPDATE.labels(status="success").set_to_current_time()
