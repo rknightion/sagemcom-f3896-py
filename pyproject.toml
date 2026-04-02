@@ -1,4 +1,4 @@
-[tool.poetry]
+[project]
 name = "sagemcom-f3896-client"
 version = "0.6.2"
 description = "Sagemcom F3896 exporter"
