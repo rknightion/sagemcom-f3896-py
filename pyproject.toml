@@ -8,7 +8,7 @@ requires-python = ">=3.14"
 dependencies = [
     "click>=8.1.7,<9",
     "aiohttp>=3.9.4,<4",
-    "prometheus-async[aiohttp]>=22.2.0,<23",
+    "prometheus-async[aiohttp]>=26.1,<27",
 ]
 
 [project.scripts]

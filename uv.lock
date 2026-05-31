@@ -346,20 +346,15 @@ wheels = [
 
 [[package]]
 name = "prometheus-async"
-version = "22.2.0"
+version = "26.1.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "prometheus-client" },
     { name = "wrapt" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/12/1c/6e3a318f06e786b892a12196bfb5d873802dbabc2eedd7c5b8a88098d0f5/prometheus-async-22.2.0.tar.gz", hash = "sha256:b0426370eb3b3bacd99afcf1fcc669c118cb67603cc951a6fe12434e9d4307f2", size = 35288, upload-time = "2022-05-14T15:06:09.882Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/3a/36/b28785a5639095d889f04bf06bf0e89cb700a2766604f03f6445d0bac4ad/prometheus_async-26.1.0.tar.gz", hash = "sha256:71b0868ed95ddb3bf8275b19e681f8730ac2a9a0e2df06923ebc4943dcc1b83b", size = 38631, upload-time = "2026-03-24T15:48:50.418Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/65/34/0d20a85b07fe16ad3423b0f11d37a3345e6967cc7391825d8f3b87f0e704/prometheus_async-22.2.0-py3-none-any.whl", hash = "sha256:5cbfa535561342b834c087c4f3f3be0a3cb8785a0b8748111c916f3d68bbc370", size = 17770, upload-time = "2022-05-14T15:06:07.879Z" },
-]
-
-[package.optional-dependencies]
-aiohttp = [
-    { name = "aiohttp" },
+    { url = "https://files.pythonhosted.org/packages/27/03/2b2a24228a5fef41fa727c83880efc097be318ba7e247d2243c222bba235/prometheus_async-26.1.0-py3-none-any.whl", hash = "sha256:fde2ab74a5a7df2b9a93666d68bae4c760950e71f50786645d3b26e2cd749a36", size = 18289, upload-time = "2026-03-24T15:48:49.176Z" },
 ]
 
 [[package]]
@@ -544,7 +539,7 @@ source = { editable = "." }
 dependencies = [
     { name = "aiohttp" },
     { name = "click" },
-    { name = "prometheus-async", extra = ["aiohttp"] },
+    { name = "prometheus-async" },
 ]
 
 [package.dev-dependencies]
@@ -561,7 +556,7 @@ dev = [
 requires-dist = [
     { name = "aiohttp", specifier = ">=3.9.4,<4" },
     { name = "click", specifier = ">=8.1.7,<9" },
-    { name = "prometheus-async", extras = ["aiohttp"], specifier = ">=22.2.0,<23" },
+    { name = "prometheus-async", extras = ["aiohttp"], specifier = ">=26.1,<27" },
 ]
 
 [package.metadata.requires-dev]
