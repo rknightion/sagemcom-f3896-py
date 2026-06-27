@@ -31,6 +31,9 @@ build-backend = "hatchling.build"
 [tool.ruff]
 line-length = 88
 lint.ignore = ["E501"]
+# exporter.py must call warnings.filterwarnings() before importing prometheus_async (it emits a
+# SyntaxWarning at import on Python 3.14+), so its imports are intentionally not at top-of-file.
+lint.per-file-ignores = { "sagemcom_f3896_client/exporter.py" = ["E402"] }
 
 [tool.pytest.ini_options]
 junit_family = "xunit2"
