@@ -1,6 +1,6 @@
 [project]
 name = "sagemcom-f3896-client"
-version = "0.6.2"
+version = "0.7.0"
 description = "Sagemcom F3896 exporter"
 authors = [{ name = "Ties de Kock", email = "ties@tiesdekock.nl" }]
 readme = "README.md"
