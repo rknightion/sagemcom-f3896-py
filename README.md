@@ -1,5 +1,7 @@
 # Sagemcom F3896 client
 
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/rknightion/sagemcom-f3896-py/badge)](https://scorecard.dev/viewer/?uri=github.com/rknightion/sagemcom-f3896-py)
+
 A client for the Sagemcom F3896 modem. (Works with ZIGGO Modems that now require HTTPS)
 
 Main goal of @ties is to have metrics from the modem, but the general structure should allow this libary to be used to add other features.
