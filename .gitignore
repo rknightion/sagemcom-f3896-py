@@ -160,3 +160,6 @@ cython_debug/
 #.idea/
 .autoenv.zsh
 .DS_Store
+
+# Superpowers scratch (specs/plans/audits) — never committed
+docs/superpowers/
