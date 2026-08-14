@@ -90,7 +90,7 @@ grep -rniE "rknightion|rob-knight|m7kni|@gmail|([0-9a-f]{2}:){5}[0-9a-f]{2}" bac
 
 **Never use `--notes` or `--plan` bare.** They *silently replace* the whole section — another
 session's writes vanish with no warning and exit 0. Use `--append-notes` and `--append-plan`. This
-is an open upstream bug, not a misunderstanding. `.claude/hooks/backlog-guard.py` denies the bare
+is an open upstream bug, not a misunderstanding. A global `PreToolUse` hook in the agent config denies the bare
 forms at `PreToolUse` rather than trusting anyone to remember.
 
 **Finalize in one call**, so an interrupted agent cannot leave finished work looking unfinished:
