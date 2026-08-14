@@ -31,6 +31,10 @@ build-backend = "hatchling.build"
 [tool.ruff]
 line-length = 88
 lint.ignore = ["E501"]
+# .claude/hooks/ is agent-harness enforcement, not project code, and backlog-guard.py is kept
+# byte-identical to the copy in the other repos that use it. Letting this project's formatter
+# rewrite it would fork a file whose whole value is being the same everywhere.
+extend-exclude = [".claude"]
 # exporter.py must call warnings.filterwarnings() before importing prometheus_async (it emits a
 # SyntaxWarning at import on Python 3.14+), so its imports are intentionally not at top-of-file.
 lint.per-file-ignores = { "sagemcom_f3896_client/exporter.py" = ["E402"] }
