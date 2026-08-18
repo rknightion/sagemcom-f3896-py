@@ -6,6 +6,31 @@
   * Improved tests of channel profile store.
   * **removed `modem_downstream_errors` and `modem_upstream_timeouts`.
 
+## [0.8.0](https://github.com/rknightion/sagemcom-f3896-py/compare/v0.7.0...v0.8.0) (2026-08-18)
+
+
+### Features
+
+* mint release-please token from the OpenBao broker ([bc47690](https://github.com/rknightion/sagemcom-f3896-py/commit/bc4769082a88f2fce2a5cdbbeff974b69a765b1d))
+
+
+### Documentation
+
+* re-import fan-out protocol (context-cost rules) ([4ee171f](https://github.com/rknightion/sagemcom-f3896-py/commit/4ee171f4c4827ac07a8a081a22a2605619e0c677))
+* re-render the fan-out protocol from agent-docs ([a31d6a6](https://github.com/rknightion/sagemcom-f3896-py/commit/a31d6a6e3210a9d09fc7acc1a1b1d1e5ea94f8a2))
+* re-render the fan-out protocol from agent-docs 711db6c ([d6fd289](https://github.com/rknightion/sagemcom-f3896-py/commit/d6fd2893266b1ec12ef09c72bcd61cdbd5cfe0f2))
+* re-render the fan-out protocol from agent-docs b0d76d8 ([dc7e150](https://github.com/rknightion/sagemcom-f3896-py/commit/dc7e150a2510c2b818028b9b48dbe17c5dcd07bb))
+* **tracker:** align canonical fan-out protocol ([281613e](https://github.com/rknightion/sagemcom-f3896-py/commit/281613e45a9197c7f7cac1ccd17148d185acb79b))
+* **tracker:** correct the canonical owner in the rendered header ([e4b0dd4](https://github.com/rknightion/sagemcom-f3896-py/commit/e4b0dd4175c69e423fe74fef978845a5475157aa))
+* **tracker:** re-import the fan-out protocol from canonical ([0dffe2c](https://github.com/rknightion/sagemcom-f3896-py/commit/0dffe2c04aab26340cde849e508a2a2d6eb5c4f2))
+* **tracker:** render agent documents from the canonical source ([05fd5cc](https://github.com/rknightion/sagemcom-f3896-py/commit/05fd5ccb5572a3bf0edf1a6c313768b5f02cf28e))
+
+
+### Build & CI
+
+* add auto-rc, arm-automerge and ghcr-cleanup ([d2f57e1](https://github.com/rknightion/sagemcom-f3896-py/commit/d2f57e1ac1d105ef454d76ab1ca547103a3d2339))
+* repin the release-automation reusables to v1.8.0 ([7d70a46](https://github.com/rknightion/sagemcom-f3896-py/commit/7d70a467fd4e741cea8fd196bdc159d7c9c3f7e5))
+
 ## [0.7.0](https://github.com/rknightion/sagemcom-f3896-py/compare/v0.6.2...v0.7.0) (2026-07-03)
 
 
