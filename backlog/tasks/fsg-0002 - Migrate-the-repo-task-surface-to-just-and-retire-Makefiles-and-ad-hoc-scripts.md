@@ -1,10 +1,11 @@
 ---
 id: FSG-0002
 title: Migrate the repo task surface to just and retire Makefiles and ad-hoc scripts
-status: To Do
-assignee: []
+status: Parked
+assignee:
+  - '@codex'
 created_date: '2026-08-28 19:26'
-updated_date: '2026-08-29 10:43'
+updated_date: '2026-08-29 14:40'
 labels:
   - 'wave:2-fleet'
 dependencies: []
@@ -518,6 +519,23 @@ Makefile or script files to remove, so steps 4–6 can't break a still-reference
 - [ ] #3 uv run pytest tests
 <!-- DOD:END -->
 
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. Reconcile the live Python workflow, hook config, docs, and task-surface inventory against the fleet contract.
+2. Add the formatted top-level justfile and migrate the eligible CI, agent-contract, and definition-of-done entry points without changing reusable workflow coupling or hook behavior.
+3. Validate justfile syntax/format and the local gate; sweep removed-entry-point references and inspect the focused diff.
+4. Run the required review if the final diff has branching code, commit named paths to main, push, verify exact-HEAD CI, then finalize every acceptance criterion in one Backlog call.
+<!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Added the formatted top-level justfile and migrated the Python workflow to SHA-pinned setup-just plus just recipes. The local Just format/dump/list/check gates, hook configuration run, actionlint, and zizmor pass; the Makefile/script and stale-doc inventories remain empty. Exact-HEAD CI is pending the focused commit and push.
+
+Blocked before commit, push, and exact-HEAD CI: the required CodeRabbit review returned a recoverable organisation rate-limit error with a 13-minute wait and no available on-demand route. The focused implementation is staged and all local validation is recorded above.
+<!-- SECTION:NOTES:END -->
+
 ## Comments
 
 <!-- COMMENTS:BEGIN -->
@@ -561,3 +579,9 @@ Eleven of the 42 lanes arrived at this shape independently before it was ratifie
 **If this repo has no such legs, it has no `ci` recipe at all** and `check` is the whole gate. Do not add an empty one.
 ---
 <!-- COMMENTS:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Parked with the justfile migration staged but uncommitted. Resume after the CodeRabbit review quota becomes available: complete the review, address any findings, rerun the focused final gate, commit the named paths, push main, verify CI at that exact SHA, then finalize all acceptance criteria in one call.
+<!-- SECTION:FINAL_SUMMARY:END -->
