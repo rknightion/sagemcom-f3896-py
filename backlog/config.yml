@@ -2,9 +2,7 @@ project_name: "sagemcom-f3896-py"
 default_status: "To Do"
 statuses: ["To Do", "In Progress", "Parked", "Done"]
 definition_of_done:
-  - "uv run ruff check ."
-  - "uv run ruff format --check ."
-  - "uv run pytest tests"
+  - "just check"
 labels: []
 date_format: yyyy-mm-dd
 max_column_width: 20

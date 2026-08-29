@@ -6,24 +6,31 @@ exporter and CLI.
 This file is canonical for contributor and agent instructions. `CLAUDE.md` imports it, so Claude
 Code and Codex read the same text and cannot drift apart.
 
-## Commands
+## Task interface
+
+This repo's task surface is a `justfile`. Discover it, don't guess it:
+
+    just --list                        # human-readable
+    just --dump --dump-format json     # machine-readable
+    just --show <recipe>               # what a recipe actually runs
+
+- `just check` is the full gate and is exactly what CI enforces. It must pass before you commit.
+- Prefer `just <recipe>` over the underlying tool. If you are typing `pytest`, you want `just test`.
+- Run `just` with stdin from /dev/null. Recipes marked `[confirm]` are destructive — stop and ask
+  before running one; never pass `--yes` or `JUST_YES=1`.
+- If a task you need does not exist, add a recipe with a `#` doc comment and a `[group(...)]`
+  rather than running a bare command.
+
+Ad-hoc commands not covered by a recipe:
 
 ```bash
-uv sync                       # Install dependencies
-uv run pytest tests           # Run tests (integration tests skip without MODEM_PASSWORD)
-uv run pytest -x -q           # Quick run, stop on first failure
-
-uv run ruff check .           # Lint
-uv run ruff format --check .  # Formatting gate (CI runs --check, not a rewrite)
-pre-commit run --all-files    # Same ruff pair, via the hook config
-
 uv run python -m sagemcom_f3896_client.cli --help   # CLI
 uv run python -m sagemcom_f3896_client.exporter -v  # Exporter, port 8080
 ```
 
-The three gate commands are also `definition_of_done` in `backlog/config.yml`, so every new task
-inherits them as a checklist. They mirror the `lint` and `test` jobs in
-`.github/workflows/python.yaml`, whose single required status check is `ci-success`.
+The gate is also `definition_of_done` in `backlog/config.yml`, so every new task inherits it as a
+checklist. It mirrors the `lint` and `test` jobs in `.github/workflows/python.yaml`, whose single
+required status check is `ci-success`.
 
 ## Architecture
 
