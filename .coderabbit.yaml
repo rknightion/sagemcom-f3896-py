@@ -1,0 +1,25 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+# Product-specific additions to the central CodeRabbit defaults.
+# Keep inheritance enabled; shared review policy lives in the owner/coderabbit repository.
+inheritance: true
+reviews:
+  path_instructions:
+  - path: sagemcom_f3896_client/client.py
+    instructions: >-
+      Review modem requests against the explicit unauthenticated endpoint allowlist. Preserve relative-path
+      normalization, serialized login, token refresh/use, logout cleanup and shared aiohttp session ownership.
+      Check status handling without assert-dependent runtime safety, redact passwords, tokens and raw
+      modem responses from logs, and distinguish auth failures from transport failures. Changes to endpoint
+      paths must update authentication classification deliberately.
+  - path: sagemcom_f3896_client/exporter.py
+    instructions: >-
+      Preserve the deliberate pre-import warning filter. Review each collection as an atomic metric snapshot:
+      concurrent scrapes must remain serialized, timeouts may serve the previous registry but must expose
+      failure status, missing authenticated fields must not become fabricated zero values, and labels
+      must avoid modem identifiers or unbounded cardinality. Keep metric names, units and gauge/info semantics
+      compatible with existing scrapers.
+  - path: tests/**
+    instructions: >-
+      Distinguish hermetic tests from hardware-backed tests that skip without MODEM_PASSWORD. Do not accept
+      a green skipped run as proof of authenticated login/logout, token management or live modem response
+      compatibility; require explicit evidence when a change depends on hardware behaviour.
