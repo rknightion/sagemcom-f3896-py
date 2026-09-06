@@ -1,123 +1,67 @@
 # sagemcom-f3896-py
 
-Python async client for the Sagemcom F3896 cable modem REST API, with a Prometheus metrics
-exporter and CLI.
-
-This file is canonical for contributor and agent instructions. `CLAUDE.md` imports it, so Claude
-Code and Codex read the same text and cannot drift apart.
+Python async client for the Sagemcom F3896 cable modem REST API, with a Prometheus metrics exporter
+and CLI.
 
 ## Task interface
 
-This repo's task surface is a `justfile`. Discover it, don't guess it:
+`just check` is the gate and must pass before you commit. It is also the `definition_of_done` in
+`backlog/config.yml`, so every new task inherits it as a checklist, and it mirrors the `lint` and
+`test` jobs in `.github/workflows/python.yaml` whose single required status check is `ci-success`.
 
-    just --list                        # human-readable
-    just --dump --dump-format json     # machine-readable
-    just --show <recipe>               # what a recipe actually runs
+- Run `just` with stdin from `/dev/null`. `just clean` is `[confirm]`-gated and destroys `.venv`,
+  `dist/`, `htmlcov/` and the caches; ask before running it and never pass `--yes` or `JUST_YES=1`.
+- No recipe covers running the programs; do that directly:
 
-- `just check` is the full gate and is exactly what CI enforces. It must pass before you commit.
-- Prefer `just <recipe>` over the underlying tool. If you are typing `pytest`, you want `just test`.
-- Run `just` with stdin from /dev/null. Recipes marked `[confirm]` are destructive — stop and ask
-  before running one; never pass `--yes` or `JUST_YES=1`.
-- If a task you need does not exist, add a recipe with a `#` doc comment and a `[group(...)]`
-  rather than running a bare command.
+      uv run python -m sagemcom_f3896_client.cli --help
+      uv run python -m sagemcom_f3896_client.exporter -v   # listens on 8080
 
-Ad-hoc commands not covered by a recipe:
+## Environment
 
-```bash
-uv run python -m sagemcom_f3896_client.cli --help   # CLI
-uv run python -m sagemcom_f3896_client.exporter -v  # Exporter, port 8080
-```
-
-The gate is also `definition_of_done` in `backlog/config.yml`, so every new task inherits it as a
-checklist. It mirrors the `lint` and `test` jobs in `.github/workflows/python.yaml`, whose single
-required status check is `ci-success`.
-
-## Architecture
-
-- `sagemcom_f3896_client/client.py` — async aiohttp client (`SagemcomModemClient`,
-  `SagemcomModemSessionClient`) for the modem REST API
-- `sagemcom_f3896_client/models.py` — dataclass models for API responses
-- `sagemcom_f3896_client/exporter.py` — Prometheus metrics exporter
-- `sagemcom_f3896_client/cli.py` — Click CLI for modem status, logs, reboot
-- `sagemcom_f3896_client/log_parser.py` — parses modem event log messages
-- `sagemcom_f3896_client/profile_messages.py` — tracks DOCSIS profile change messages
-
-## Environment variables
-
-- `MODEM_PASSWORD` — required for authenticated endpoints and integration tests
-- `MODEM_URL` — modem base URL (default `http://192.168.100.1`)
+- `MODEM_PASSWORD` - required for authenticated endpoints and integration tests.
+- `MODEM_URL` - modem base URL, default `https://192.168.100.1`. It is HTTPS with a self-signed
+  certificate, so the test fixture disables hostname checking and verification.
 
 ## Code style
 
-Ruff only — `ruff` for lint and `ruff format` for formatting, and nothing else. An earlier version
-of these instructions listed black, flake8 and isort; that was **wrong**, and
-`.pre-commit-config.yaml` has only ever configured the two ruff hooks. Do not reintroduce the other
-three or write config for them.
+Ruff only: `ruff` for lint, `ruff format` for formatting. Do not add black, flake8 or isort, and do
+not write config for them - `.pre-commit-config.yaml` configures the two ruff hooks and nothing else.
 
-- `line-length = 88`, `E501` ignored (see `[tool.ruff]` in `pyproject.toml`)
-- `requires-python = ">=3.14"`
-- `exporter.py` is exempt from `E402` on purpose: it must call `warnings.filterwarnings()` before
-  importing `prometheus_async`, which emits a `SyntaxWarning` at import on Python 3.14+. Moving
-  those imports to the top of the file reintroduces the warning.
+- `line-length = 88` with `E501` ignored, in `[tool.ruff]` in `pyproject.toml`.
+- `requires-python = ">=3.14"`.
+- `exporter.py` is exempt from `E402` on purpose. It must call `warnings.filterwarnings()` before
+  importing `prometheus_async`, which otherwise emits a `SyntaxWarning` at import from its Twisted
+  module. Moving those imports to the top of the file reintroduces the warning.
 
 ## Gotchas
 
-- Integration tests in `tests/test_client.py` and `tests/test_client_session.py` need a real modem.
-  They read `MODEM_PASSWORD` from the environment and **skip** cleanly without it, so a green local
-  run is not the same coverage as a run against hardware. Say which one you got.
-- The client auto-manages login/logout sessions. Some REST endpoints need no auth — see
+- The integration tests in `tests/test_client.py` and `tests/test_client_session.py` need a real
+  modem. `requires_modem_password()` in `tests/util.py` skips them cleanly when `MODEM_PASSWORD` is
+  unset, so a green local run is not the same coverage as a run against hardware. Say which one you
+  got.
+- The client auto-manages login and logout sessions. Some REST endpoints need no auth; the set is
   `UNAUTHORIZED_ENDPOINTS` in `client.py`.
-- pytest-asyncio provides the async test support.
 
 ## Task tracking
 
-Work is tracked with [Backlog.md](https://github.com/MrLesk/Backlog.md) in `backlog/`, driven
-through its CLI. `backlog task list --plain` is the queue; `backlog doc list --plain` is the durable
-documentation.
+- `backlog/` is committed, so tasks and docs never carry real identifiers. For this project that
+  means no modem MAC addresses, serial numbers, CM/CMTS identifiers, boot file names, ISP account or
+  subscriber IDs, WAN IP addresses, or `/rest/v1/...` response bodies pasted verbatim off a live
+  modem. Write the shape, not the instance - `<mac>`, `<serial>`, `<flow-id>`. Aggregate counts,
+  channel counts, timings and structural findings are fine. Sweep before committing:
 
-Read the **Agent fan-out protocol (canonical)** doc before designing a wave, and the **Wave
-operating model** doc for this project's own rules. Both are in `backlog/docs/`; view them with
-`backlog doc view <id> --plain`.
+      grep -rniE "rknightion|rob-knight|m7kni|@gmail|([0-9a-f]{2}:){5}[0-9a-f]{2}" backlog/ && echo "PII FOUND"
 
-### Non-negotiable rules
+- `backlog/config.yml` is the one file exempt from driving the tracker through its CLI, because
+  list-valued keys cannot be set through `backlog config set`.
+- Finalize in one call: `backlog task edit FSG-0001 --check-ac 1 --check-ac 2 -s Done`. The shipped
+  guides check criteria at one step and set status several steps later, so anything interrupting in
+  between leaves the task inconsistent.
+- Never let two agents edit the same task. The upstream concurrent-write fix covers the edit funnel
+  but not reorder, draft saves, the TUI edit path, `doc update` or decision updates.
 
-These sit outside the tool-managed marker block below so upstream instruction updates leave them
-alone.
-
-**`backlog/` is committed to git, so tasks and docs must never contain real identifiers.** For this
-project that specifically means: no modem MAC addresses, serial numbers, CM/CMTS identifiers, boot
-file names, ISP account or subscriber IDs, WAN IP addresses, or captured `/rest/v1/...` response
-bodies pasted verbatim from a live modem. Write the shape, not the instance — `<mac>`, `<serial>`,
-`<flow-id>`. Aggregate counts, channel counts, timings and structural findings are fine. Sweep
-before committing:
-
-```bash
-grep -rniE "rknightion|rob-knight|m7kni|@gmail|([0-9a-f]{2}:){5}[0-9a-f]{2}" backlog/ && echo "PII FOUND"
-```
-
-**Never use `--notes` or `--plan` bare.** They *silently replace* the whole section — another
-session's writes vanish with no warning and exit 0. Use `--append-notes` and `--append-plan`. This
-is an open upstream bug, not a misunderstanding. A global `PreToolUse` hook in the agent config denies the bare
-forms at `PreToolUse` rather than trusting anyone to remember.
-
-**Finalize in one call**, so an interrupted agent cannot leave finished work looking unfinished:
-
-```bash
-backlog task edit FSG-0001 --check-ac 1 --check-ac 2 -s Done
-```
-
-The shipped guides check criteria at one step and set status several steps later. Anything
-interrupting in between — a context limit, a session ending — leaves the task inconsistent.
-
-**Never hand-edit task, draft, doc, decision or milestone markdown.** Section boundaries are
-HTML-comment markers; break one and the section is *silently dropped* at exit 0, with the data
-still in the file but invisible to the CLI until the next write destroys it for real. There is no
-repair command — `backlog doctor` only fixes duplicate task IDs. The guard hook blocks writes to
-those directories. `backlog/config.yml` is the one exception and may be edited by hand, because
-list-valued keys cannot be set through `backlog config set`.
-
-**Never let two agents edit the same task.** v1.50.x fixed the concurrent-write race in the edit
-funnel but not in reorder, draft saves, the TUI edit path, `doc update` or decision updates.
+Read the `Agent fan-out protocol (canonical)` doc before designing a wave, and `Wave operating model`
+for this project's own rules. Both are in `backlog/docs/`; view with `backlog doc view <id> --plain`.
 
 <!-- BACKLOG.MD GUIDELINES START -->
 <!-- backlog.md-instructions-version: 1.50.1 -->
