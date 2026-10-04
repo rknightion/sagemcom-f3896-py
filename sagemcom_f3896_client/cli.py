@@ -113,7 +113,7 @@ async def print_status():
         click.echo(f"| Hardware version | {system_info.hardware_version:>28} |")
         click.echo(f"| Software version | {system_info.software_version:>28} |")
         uptime = datetime.timedelta(seconds=system_state.up_time)
-        click.echo(f"| Uptime           | {str(uptime):>28} |")
+        click.echo(f"| Uptime           | {uptime!s:>28} |")
         click.echo(f"| Boot file        | {system_state.boot_file_name:>28} |")
         click.echo(f"| DOCSIS version   | {system_state.docsis_version:>28} |")
         click.echo(f"| Status           | {system_state.status:>28} |")
@@ -162,7 +162,7 @@ async def do_reboot():
                 if (res is not None and res["ping"]) and had_failure:
                     break
             except (
-                asyncio.TimeoutError,
+                TimeoutError,
                 aiohttp.client_exceptions.ClientConnectorError,
             ):
                 click.echo("x", nl=False)
