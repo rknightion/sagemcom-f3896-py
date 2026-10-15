@@ -52,8 +52,7 @@ not write config for them - `.pre-commit-config.yaml` configures the two ruff ho
 
       grep -rniE "rknightion|rob-knight|m7kni|@gmail|([0-9a-f]{2}:){5}[0-9a-f]{2}" backlog/ && echo "PII FOUND"
 
-Read the `Agent fan-out protocol (canonical)` doc before designing a wave, and `Wave operating model`
-for this project's own rules. Both are in `backlog/docs/`; view with `backlog doc view <id> --plain`.
+Loops: the protocol lives in `~/repos/agent-docs/sources/loop/` (this board's "Loop protocol pointer" doc points there); this repository's loop facts are in `LOOP.md`.
 
 <!-- BACKLOG.MD GUIDELINES START -->
 <!-- backlog.md-instructions-version: 1.50.1 -->
