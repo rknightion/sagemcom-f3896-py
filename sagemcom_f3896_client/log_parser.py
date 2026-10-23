@@ -1,20 +1,19 @@
 import re
 from dataclasses import dataclass
-from typing import Optional, Tuple
 
 
 @dataclass(eq=True, frozen=True)
 class DownstreamProfileMessage:
     channel_id: int
-    previous_profile: Optional[Tuple[int, ...]]
-    profile: Tuple[int, ...]
+    previous_profile: tuple[int, ...] | None
+    profile: tuple[int, ...]
 
 
 @dataclass(eq=True, frozen=True)
 class UpstreamProfileMessage:
     channel_id: int
-    previous_profile: Optional[Tuple[int, ...]]
-    profile: Tuple[int, ...]
+    previous_profile: tuple[int, ...] | None
+    profile: tuple[int, ...]
 
 
 @dataclass(eq=True, frozen=True)
@@ -26,7 +25,7 @@ class CMStatusMessageOFDM:
     """
 
     channel_id: int
-    ds_id: Optional[str]
+    ds_id: str | None
     profile: int
     event_code: int
 
@@ -60,7 +59,7 @@ def is_login_message(item) -> bool:
     return "GUI Login Status - Login Success from LAN interface" in item.message
 
 
-def parse_message(message: str) -> Optional[ParsedMessage]:
+def parse_message(message: str) -> ParsedMessage | None:
     """Parse a message in the modem log"""
     match = CM_STATUS_OFDM_RE.match(message)
     if match:

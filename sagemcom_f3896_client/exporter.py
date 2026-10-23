@@ -3,7 +3,6 @@ import logging
 import os
 import time
 import warnings
-from typing import List, Set
 
 # prometheus_async's Twisted module has 'return' in 'finally' blocks that
 # trigger SyntaxWarning on Python 3.14+. We only use the aiohttp side.
@@ -61,17 +60,17 @@ class Exporter:
 
     include_login_messages: bool = False
 
-    modem_downstreams: List[ModemDownstreamChannelResult] = []
-    modem_upstreams: List[ModemUpstreamChannelResult] = []
+    modem_downstreams: list[ModemDownstreamChannelResult]
+    modem_upstreams: list[ModemUpstreamChannelResult]
 
     profile_messages: ProfileMessageStore
-    previous_logs: Set[EventLogItem] = set()
+    previous_logs: set[EventLogItem]
 
     """The registry of metrics from the last fetch."""
     registry: CollectorRegistry = CollectorRegistry()
 
     """A collection of storng references to tasks that run in the background that we do not want to be cancelled."""
-    background_tasks: Set[asyncio.Task] = set()
+    background_tasks: set[asyncio.Task]
 
     __metrics_updating_lock: asyncio.Lock = asyncio.Lock()
     __last_boot_time: float = 0
@@ -88,6 +87,10 @@ class Exporter:
         self.include_login_messages = include_login_messages
 
         self.profile_messages = ProfileMessageStore()
+        self.modem_downstreams = []
+        self.modem_upstreams = []
+        self.previous_logs = set()
+        self.background_tasks = set()
 
         self.app.add_routes(
             [
@@ -302,9 +305,9 @@ class Exporter:
 
                 self.registry = registry
             except (
+                TimeoutError,
                 aiohttp.ClientResponseError,
                 aiohttp.client_exceptions.ClientConnectorError,
-                asyncio.TimeoutError,
             ) as e:
                 LOG.exception("Failed to gather metrics")
                 MODEM_UPDATE_COUNT.labels(status="failed").inc()
@@ -537,7 +540,7 @@ class Exporter:
                         }
                     )
                 case _:
-                    raise ValueError("Unknown downstream type %s" % ch.channel_type)
+                    raise ValueError(f"Unknown downstream type {ch.channel_type}")
 
     async def __log_based_metrics(self, registry: CollectorRegistry) -> None:
         """
@@ -633,23 +636,23 @@ class Exporter:
                     previous_profile=_,
                     profile=profile,
                 ):
-                    for idx, profile in enumerate(profile):
+                    for idx, slot_profile in enumerate(profile):
                         metric_channel_profile.labels(
                             direction="downstream",
                             channel_id=channel_id,
                             slot=str(idx + 1),
-                        ).set(profile)
+                        ).set(slot_profile)
                 case UpstreamProfileMessage(
                     channel_id=channel_id,
                     previous_profile=_,
                     profile=profile,
                 ):
-                    for idx, profile in enumerate(profile):
+                    for idx, slot_profile in enumerate(profile):
                         metric_channel_profile.labels(
                             direction="upstream",
                             channel_id=channel_id,
                             slot=str(idx + 1),
-                        ).set(profile)
+                        ).set(slot_profile)
 
     async def index(self, _: web.Request) -> str:
         """Serve an index page."""

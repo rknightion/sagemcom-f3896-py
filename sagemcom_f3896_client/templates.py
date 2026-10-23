@@ -1,10 +1,8 @@
-from typing import List
-
 from sagemcom_f3896_client.log_parser import ParsedMessage
 from sagemcom_f3896_client.models import EventLogItem
 
 
-def format_log_entries(logs: List[ParsedMessage]):
+def format_log_entries(logs: list[ParsedMessage]):
     for entry in logs:
         yield f"{' ' * 8}<tr><td>{entry.time.ctime()}</td><td>"
         if entry.priority == "error":
@@ -15,7 +13,7 @@ def format_log_entries(logs: List[ParsedMessage]):
         yield f"</td><td>{entry.message}</td></tr>"
 
 
-def index_template(logs: List[EventLogItem]) -> str:
+def index_template(logs: list[EventLogItem]) -> str:
     return f"""<html>
             <head><title>Sagemcom F3896</title></head>
             <style>
