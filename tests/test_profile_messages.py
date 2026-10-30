@@ -1,4 +1,3 @@
-from typing import Optional, Set
 from unittest.mock import Mock
 
 from sagemcom_f3896_client.log_parser import (
@@ -20,7 +19,7 @@ def channel(id: int) -> ModemDownstreamChannelResult | ModemUpstreamChannelResul
 
 
 def ds_message(
-    channel_id: int, profile: Set[int], old_profile: Optional[Set[int]]
+    channel_id: int, profile: set[int], old_profile: set[int] | None
 ) -> DownstreamProfileMessage:
     return DownstreamProfileMessage(
         channel_id=channel_id,
@@ -30,7 +29,7 @@ def ds_message(
 
 
 def us_message(
-    channel_id: int, profile: Set[int], old_profile: Optional[Set[int]] = None
+    channel_id: int, profile: set[int], old_profile: set[int] | None = None
 ) -> UpstreamProfileMessage:
     return UpstreamProfileMessage(
         channel_id=channel_id,
