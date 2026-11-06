@@ -48,7 +48,7 @@ async def test_event_log(client: SagemcomModemSessionClient, caplog: LogCaptureF
         "critical"
     ] == len(log_elements)
 
-    now = datetime.datetime.now().replace(tzinfo=datetime.timezone.utc)
+    now = datetime.datetime.now(tz=datetime.UTC)
 
     for elem in log_elements:
         # assume all log elements are less than a year old

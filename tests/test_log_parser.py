@@ -1,5 +1,3 @@
-from typing import Set
-
 from sagemcom_f3896_client.log_parser import (
     CMStatusMessageOFDM,
     DownstreamProfileMessage,
@@ -65,7 +63,7 @@ LOG_MESSAGES = [
 
 def test_log_parser_integration_test():
     """Test the log parser on the set of real messages."""
-    types: Set[type] = set()
+    types: set[type] = set()
 
     for line in LOG_MESSAGES:
         parsed = parse_message(line)

@@ -1,7 +1,7 @@
 import datetime
 import logging
 from dataclasses import dataclass
-from typing import Dict, List, Literal
+from typing import Literal
 
 from sagemcom_f3896_client.log_parser import ParsedMessage, parse_message
 
@@ -15,7 +15,7 @@ class UserAuthorisationResult:
     user_id: int
 
     @staticmethod
-    def build(body: Dict[str, str]) -> "UserAuthorisationResult":
+    def build(body: dict[str, str]) -> UserAuthorisationResult:
         return UserAuthorisationResult(
             token=body["created"]["token"],
             user_level=body["created"]["userLevel"],
@@ -29,7 +29,7 @@ class UserTokenResult:
     user_level: str
 
     @staticmethod
-    def build(body: Dict[str, str]) -> "UserTokenResult":
+    def build(body: dict[str, str]) -> UserTokenResult:
         return UserTokenResult(
             token=body["created"]["token"],
             user_level=body["created"]["userLevel"],
@@ -49,7 +49,7 @@ class EventLogItem:
     message: str
 
     @staticmethod
-    def build(elem: Dict[str, str]) -> List["EventLogItem"]:
+    def build(elem: dict[str, str]) -> list[EventLogItem]:
         return EventLogItem(
             time=datetime.datetime.fromisoformat(elem["time"]),
             priority=elem["priority"],
@@ -73,7 +73,7 @@ class ModemStateResult:
     baseline_privacy_enabled: bool
 
     @staticmethod
-    def build(body: Dict[str, str]) -> "ModemStateResult":
+    def build(body: dict[str, str]) -> ModemStateResult:
         return ModemStateResult(
             boot_file_name=body["cablemodem"]["bootFilename"],
             docsis_version=body["cablemodem"]["docsisVersion"],
@@ -107,7 +107,7 @@ class ModemQAMDownstreamChannelResult(ModemDownstreamChannelResult):
     modulation: str
 
     @staticmethod
-    def build(elem: Dict[str, str]) -> "ModemQAMDownstreamChannelResult":
+    def build(elem: dict[str, str]) -> ModemQAMDownstreamChannelResult:
         lock = elem["lockStatus"]
         return ModemQAMDownstreamChannelResult(
             channel_type=elem["channelType"],
@@ -133,7 +133,7 @@ class ModemOFDMDownstreamChannelResult(ModemDownstreamChannelResult):
     modulation: Literal["qam_256", "qam_512", "qam_1024", "qam_2048", "qam_4096"]
 
     @staticmethod
-    def build(elem: Dict[str, str]) -> "ModemOFDMDownstreamChannelResult":
+    def build(elem: dict[str, str]) -> ModemOFDMDownstreamChannelResult:
         lock = elem["lockStatus"]
         return ModemOFDMDownstreamChannelResult(
             channel_type=elem["channelType"],
@@ -174,7 +174,7 @@ class ModemATDMAUpstreamChannelResult(ModemUpstreamChannelResult):
     t2_timeouts: int
 
     @staticmethod
-    def build(elem: Dict[str, str]) -> "ModemATDMAUpstreamChannelResult":
+    def build(elem: dict[str, str]) -> ModemATDMAUpstreamChannelResult:
         return ModemATDMAUpstreamChannelResult(
             channel_type=elem["channelType"],
             channel_id=elem["channelId"],
@@ -197,7 +197,7 @@ class ModemOFDMAUpstreamChannelResult(ModemUpstreamChannelResult):
     number_of_active_subcarriers: int
 
     @staticmethod
-    def build(elem: Dict[str, str]) -> "ModemOFDMAUpstreamChannelResult":
+    def build(elem: dict[str, str]) -> ModemOFDMAUpstreamChannelResult:
         return ModemOFDMAUpstreamChannelResult(
             channel_type=elem["channelType"],
             channel_id=elem["channelId"],
@@ -235,7 +235,7 @@ class ModemServiceFlowResult:
     ]
 
     @staticmethod
-    def build(elem: Dict[str, str]) -> "ModemServiceFlowResult":
+    def build(elem: dict[str, str]) -> ModemServiceFlowResult:
         return ModemServiceFlowResult(
             id=elem["serviceFlow"]["serviceFlowId"],
             direction=elem["serviceFlow"]["direction"],
@@ -254,7 +254,7 @@ class SystemInfoResult:
     hardware_version: str
 
     @staticmethod
-    def build(body: Dict[str, str]) -> "SystemInfoResult":
+    def build(body: dict[str, str]) -> SystemInfoResult:
         return SystemInfoResult(
             model_name=body["info"]["modelName"],
             software_version=body["info"]["softwareVersion"],
@@ -269,7 +269,7 @@ class SystemProvisioningResponse:
     ds_lite_enabled: bool
 
     @staticmethod
-    def build(body: Dict[str, str]) -> "SystemProvisioningResponse":
+    def build(body: dict[str, str]) -> SystemProvisioningResponse:
         return SystemProvisioningResponse(
             provisioning_mode=body["provisioning"]["mode"],
             mac_address=body["provisioning"]["macAddress"],
@@ -283,7 +283,7 @@ class RegistrationResult:
     downstream_locked: bool
 
     @staticmethod
-    def build(body: Dict[str, str]) -> "RegistrationResult":
+    def build(body: dict[str, str]) -> RegistrationResult:
         return RegistrationResult(
             registration_complete=body["registration"]["registrationComplete"],
             downstream_locked=body["registration"]["downstreamLocked"],
@@ -295,7 +295,7 @@ class SoftwareUpdateResult:
     status: str
 
     @staticmethod
-    def build(body: Dict[str, str]) -> "SoftwareUpdateResult":
+    def build(body: dict[str, str]) -> SoftwareUpdateResult:
         return SoftwareUpdateResult(
             status=body["softwareUpdate"]["status"],
         )
@@ -306,7 +306,7 @@ class ModemModeResult:
     enabled: bool
 
     @staticmethod
-    def build(body: Dict[str, str]) -> "ModemModeResult":
+    def build(body: dict[str, str]) -> ModemModeResult:
         return ModemModeResult(
             enabled=body["modemmode"]["enable"],
         )
