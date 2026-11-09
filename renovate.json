@@ -1,5 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "prFooter": "Task: none, dependency update",
   "packageRules": [
     {
       "description": "pytest core and its plugins (asyncio, cov, xdist) move together — group them into one PR.",

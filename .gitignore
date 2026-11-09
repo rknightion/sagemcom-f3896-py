@@ -165,7 +165,8 @@ cython_debug/
 docs/superpowers/
 
 # Claude Code repo-local config. `settings.json` and `hooks/` ARE tracked — they
-.claude/
+.claude/*
+!.claude/skills/
 
 # Machine-local agent artefacts, never committed
 codex/
