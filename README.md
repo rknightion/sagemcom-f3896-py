@@ -133,3 +133,7 @@ PUT /rest/v1/system/firstinstall
 > {"firstInstall":{"complete":true}}
 204 No Content
 ```
+
+## Reporting problems
+
+Report a bug or ask for a change in the [GitHub issues](https://github.com/rknightion/sagemcom-f3896-py/issues).
