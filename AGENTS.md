@@ -5,9 +5,8 @@ and CLI.
 
 ## Task interface
 
-`just check` is the gate and must pass before you commit. It is also the `definition_of_done` in
-`backlog/config.yml`, so every new task inherits it as a checklist, and it mirrors the `lint` and
-`test` jobs in `.github/workflows/python.yaml` whose single required status check is `ci-success`.
+`just check` is the gate and must pass before you commit. It mirrors the `lint` and `test` jobs in
+`.github/workflows/python.yaml`, whose single required status check is `ci-success`.
 
 - Run `just` with stdin from `/dev/null`. `just clean` is `[confirm]`-gated and destroys `.venv`,
   `dist/`, `htmlcov/` and the caches; ask before running it and never pass `--yes` or `JUST_YES=1`.
@@ -42,38 +41,23 @@ not write config for them - `.pre-commit-config.yaml` configures the two ruff ho
 - The client auto-manages login and logout sessions. Some REST endpoints need no auth; the set is
   `UNAUTHORIZED_ENDPOINTS` in `client.py`.
 
-## Task tracking
+## Tracking work
 
-- `backlog/` is committed, so tasks and docs never carry real identifiers. For this project that
+Work is tracked in this repository's GitHub issues; they are the only queue. Do not add a checklist
+file beside them.
+
+- A pull request body says how it relates to an issue, on a line of its own: `Closes #N` with the
+  `Acceptance evidence` table from `.github/pull_request_template.md` (one row for each acceptance
+  criterion of that issue), `Refs #N` when it only relates to one, or `Task: none, <reason>`.
+- A pull request that changes `.github/workflows/` or `.github/actions/` carries no closing keyword:
+  write `Task: none, <reason>`, with `Refs #N` beside it if you like.
+- Contributors never need the project board or the tracker tooling; a maintainer handles both.
+- Issues and pull requests are public, so they never carry real identifiers. For this project that
   means no modem MAC addresses, serial numbers, CM/CMTS identifiers, boot file names, ISP account or
   subscriber IDs, WAN IP addresses, or `/rest/v1/...` response bodies pasted verbatim off a live
   modem. Write the shape, not the instance - `<mac>`, `<serial>`, `<flow-id>`. Aggregate counts,
-  channel counts, timings and structural findings are fine. Sweep before committing:
-
-      grep -rniE "rknightion|rob-knight|m7kni|@gmail|([0-9a-f]{2}:){5}[0-9a-f]{2}" backlog/ && echo "PII FOUND"
-
-Loops: the protocol lives in `~/repos/agent-docs/sources/loop/` (this board's "Loop protocol pointer" doc points there); this repository's loop facts are in `LOOP.md`.
-
-<!-- BACKLOG.MD GUIDELINES START -->
-<!-- backlog.md-instructions-version: 1.50.1 -->
-<CRITICAL_INSTRUCTION>
-
-## Backlog.md Workflow
-
-This project uses Backlog.md for task and project management.
-
-**For every user request in this project, run `backlog instructions overview` before answering or taking action.**
-
-Use the overview to decide whether to search, read, create, or update Backlog tasks.
-
-Before task lifecycle actions, read the matching detailed guide:
-- `backlog instructions task-creation` before creating or splitting tasks
-- `backlog instructions task-execution` before planning, changing status or assignee, adding a plan or implementation notes, or implementing task work
-- `backlog instructions task-finalization` before checking acceptance criteria, writing final summaries, or moving tasks to terminal statuses
-
-Use `backlog <command> --help` before running unfamiliar commands. Help shows options, fields, and examples.
-
-Do not edit Backlog task, draft, document, decision, or milestone markdown files directly. Use the `backlog` CLI so metadata, relationships, and history stay consistent.
-
-</CRITICAL_INSTRUCTION>
-<!-- BACKLOG.MD GUIDELINES END -->
+  channel counts, timings and structural findings are fine. Pull request CI sweeps the lines a pull
+  request adds.
+- Older commits, docs and tests cite legacy board ids such as `FSG-0001`. `just issue <ID>` prints
+  the issue each one became; `.github/tracker/id-map.json` is the map. The retired board's documents
+  are in `.github/tracker/history/`.

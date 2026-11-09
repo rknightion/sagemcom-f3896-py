@@ -1,0 +1,22 @@
+{
+ "held": {},
+ "issues": {
+  "FSG-0001": {
+   "number": 87,
+   "url": "https://github.com/rknightion/sagemcom-f3896-py/issues/87"
+  },
+  "FSG-0002": {
+   "number": 89,
+   "url": "https://github.com/rknightion/sagemcom-f3896-py/issues/89"
+  },
+  "FSG-0003": {
+   "number": 88,
+   "url": "https://github.com/rknightion/sagemcom-f3896-py/issues/88"
+  }
+ },
+ "prefix": "FSG",
+ "repo": "rknightion/sagemcom-f3896-py",
+ "schema": 1,
+ "source_sha": "e6965a6fa3811aaffc7d8196cd8a7aae4eb68488",
+ "synthetic": []
+}

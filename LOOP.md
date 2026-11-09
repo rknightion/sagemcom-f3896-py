@@ -3,9 +3,25 @@ tier: guarded
 gate: just check
 ci-required: ci-success
 grafana-stack: none
+tracker: github
+landing: pr
 
-`backlog/` is committed: write the shape, not the instance (`<mac>`, `<serial>`, `<flow-id>`). The PII
-sweep is in `AGENTS.md`. Run `just` with stdin from `/dev/null`.
+Issues and pull requests are public: write the shape, not the instance (`<mac>`, `<serial>`,
+`<flow-id>`). Run `just` with stdin from `/dev/null`.
+
+The tracker working model is `~/repos/agent-docs/docs/github-tracker.md` (maintainers only).
+
+## Queue
+
+- The queue is `just tracker queue`: open issues at Project Status Ready on the rknightion Project.
+  Never queue the Renovate Dependency Dashboard (#12).
+- A charter selects work by labels (`type:task`, `type:bug`, `type:feature`, `needs-owner`,
+  `needs-triage`) and Project fields (Status, Priority, Effort, Lane). Never queue a `needs-owner` or
+  `needs-triage` issue.
+- Only the root writes issues and the Project, through `just tracker`. A lane returns the status and
+  the AC ticks it wants.
+- A queue row names the issue as `#N`. A legacy board id (`FSG-0001`) resolves with `just issue <ID>`;
+  `.github/tracker/id-map.json` is the map.
 
 ## Credentials
 
