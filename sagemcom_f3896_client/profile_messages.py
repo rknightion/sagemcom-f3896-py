@@ -1,5 +1,4 @@
 import logging
-from typing import List, Set
 
 from sagemcom_f3896_client.log_parser import (
     DownstreamProfileMessage,
@@ -16,15 +15,15 @@ LOG = logging.getLogger(__name__)
 class ProfileMessageStore:
     """Keep track of profile messages for channels that are still present"""
 
-    _messages: Set[DownstreamProfileMessage | UpstreamProfileMessage]
+    _messages: set[DownstreamProfileMessage | UpstreamProfileMessage]
 
     def __init__(self):
         self._messages = set()
 
     def update_for_channels(
         self,
-        ds_channels: List[ModemDownstreamChannelResult],
-        us_channels: List[ModemUpstreamChannelResult],
+        ds_channels: list[ModemDownstreamChannelResult],
+        us_channels: list[ModemUpstreamChannelResult],
     ) -> int:
         ds_channels_ids = frozenset(c.channel_id for c in ds_channels)
         us_channel_ids = frozenset(c.channel_id for c in us_channels)

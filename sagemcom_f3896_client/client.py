@@ -1,14 +1,16 @@
 import asyncio
 import logging
-import time
 import ssl
+import time
+from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from contextvars import ContextVar
-from typing import Any, AsyncGenerator, Dict, List, Literal, Optional
+from typing import Any, Literal
 
 import aiohttp
 
 from sagemcom_f3896_client.exception import LoginFailedException
+
 from .models import (
     EventLogItem,
     ModemATDMAUpstreamChannelResult,
@@ -28,22 +30,20 @@ from .models import (
 
 LOG = logging.getLogger(__name__)
 
-UNAUTHORIZED_ENDPOINTS = set(
-    [
-        "rest/v1/user/login",
-        "rest/v1/cablemodem/downstream/primary_",
-        "rest/v1/cablemodem/state_",
-        "rest/v1/cablemodem/downstream",
-        "rest/v1/cablemodem/upstream",
-        "rest/v1/cablemodem/eventlog",
-        "rest/v1/cablemodem/serviceflows",
-        "rest/v1/cablemodem/registration",
-        "rest/v1/system/gateway/provisioning",
-        "rest/v1/system/softwareupdate",
-        "rest/v1/system/modemmode",
-        "rest/v1/echo",
-    ]
-)
+UNAUTHORIZED_ENDPOINTS = {
+    "rest/v1/user/login",
+    "rest/v1/cablemodem/downstream/primary_",
+    "rest/v1/cablemodem/state_",
+    "rest/v1/cablemodem/downstream",
+    "rest/v1/cablemodem/upstream",
+    "rest/v1/cablemodem/eventlog",
+    "rest/v1/cablemodem/serviceflows",
+    "rest/v1/cablemodem/registration",
+    "rest/v1/system/gateway/provisioning",
+    "rest/v1/system/softwareupdate",
+    "rest/v1/system/modemmode",
+    "rest/v1/echo",
+}
 
 for endpoint in UNAUTHORIZED_ENDPOINTS:
     assert not endpoint.startswith("/"), "URLs should be relative"
@@ -57,7 +57,7 @@ class SagemcomModemSessionClient:
     __session: aiohttp.ClientSession
     base_url: str
     password: str
-    authorization: Optional[Any] = None
+    authorization: Any | None = None
 
     __login_semaphore = asyncio.Semaphore(1)
 
@@ -71,7 +71,7 @@ class SagemcomModemSessionClient:
         self.base_url = base_url
         self.password = password
 
-    def __headers(self) -> Dict[str, str]:
+    def __headers(self) -> dict[str, str]:
         return {
             "Accept": "*/*",
             "Referer": self.base_url,
@@ -162,11 +162,11 @@ class SagemcomModemSessionClient:
         self,
         method: Literal["GET", "POST"],
         path: str,
-        json: Optional[object] = None,
+        json: object | None = None,
         raise_for_status: bool = True,
         disable_auth: bool = False,
-    ) -> AsyncGenerator[aiohttp.ClientResponse, None]:
-        path = path[1:] if path.startswith("/") else path
+    ) -> AsyncGenerator[aiohttp.ClientResponse]:
+        path = path.removeprefix("/")
         url = f"{self.base_url.rstrip('/')}/{path}"
 
         headers = self.__headers()
@@ -201,14 +201,14 @@ class SagemcomModemSessionClient:
         async with self.__request("POST", "/rest/v1/echo", json=body) as resp:
             return await resp.json()
 
-    async def modem_event_log(self) -> List[EventLogItem]:
+    async def modem_event_log(self) -> list[EventLogItem]:
         async with self.__request("GET", "/rest/v1/cablemodem/eventlog") as resp:
             res = await resp.json()
             return sorted(
                 (EventLogItem.build(e) for e in res["eventlog"]), reverse=True
             )
 
-    async def modem_service_flows(self) -> List[ModemServiceFlowResult]:
+    async def modem_service_flows(self) -> list[ModemServiceFlowResult]:
         async with self.__request("GET", "/rest/v1/cablemodem/serviceflows") as resp:
             res = await resp.json()
             return [ModemServiceFlowResult.build(e) for e in res["serviceFlows"]]
@@ -240,7 +240,7 @@ class SagemcomModemSessionClient:
 
     async def modem_downstreams(
         self,
-    ) -> List[ModemQAMDownstreamChannelResult | ModemOFDMDownstreamChannelResult]:
+    ) -> list[ModemQAMDownstreamChannelResult | ModemOFDMDownstreamChannelResult]:
         async with self.__request("GET", "/rest/v1/cablemodem/downstream") as resp:
             return [
                 (
@@ -253,7 +253,7 @@ class SagemcomModemSessionClient:
 
     async def modem_upstreams(
         self,
-    ) -> List[ModemATDMAUpstreamChannelResult | ModemOFDMAUpstreamChannelResult]:
+    ) -> list[ModemATDMAUpstreamChannelResult | ModemOFDMAUpstreamChannelResult]:
         async with self.__request("GET", "/rest/v1/cablemodem/upstream") as resp:
             return [
                 (
