@@ -2,6 +2,7 @@ name: Python
 
 on:
   push:
+    branches: [main]
   pull_request:
     # `edited` re-runs CI when the pull request body changes, so the acceptance evidence check reads
     # the new table.
