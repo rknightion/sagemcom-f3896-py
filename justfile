@@ -8,6 +8,11 @@ default:
 setup:
     uv sync --all-groups
 
+# prepare the locked development environment for Cursor Cloud
+[group('dev')]
+cloud-bootstrap:
+    uv sync --all-groups --locked --managed-python --python 3.14 --compile-bytecode
+
 # format source in place
 [group('check')]
 fmt:
