@@ -1,4 +1,4 @@
-FROM python:3.15-alpine AS builder
+FROM python:3.15-alpine@sha256:0f9552bb28711333da16915ec146f5e6bb44a7fdac9ced15dc17c2e0206346dd AS builder
 
 WORKDIR /usr/src/app
 
@@ -8,11 +8,14 @@ COPY sagemcom_f3896_client/ sagemcom_f3896_client/
 RUN pip install --no-cache-dir uv \
     && uv sync --frozen --no-dev --no-editable
 
-FROM python:3.15-alpine
+FROM python:3.15-alpine@sha256:0f9552bb28711333da16915ec146f5e6bb44a7fdac9ced15dc17c2e0206346dd
 
 WORKDIR /usr/src/app
 
-RUN addgroup -S app && adduser -S app -G app
+# The builder supplies the installed virtual environment. Keep pip out of the runtime.
+RUN python -m pip uninstall --yes pip \
+    && addgroup -S app \
+    && adduser -S app -G app
 
 COPY --from=builder /usr/src/app/.venv /usr/src/app/.venv
 
