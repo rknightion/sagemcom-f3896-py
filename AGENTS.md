@@ -84,6 +84,17 @@ which overrides this block for loop work; nothing here depends on it.
       uv run python -m sagemcom_f3896_client.cli --help
       uv run python -m sagemcom_f3896_client.exporter -v   # listens on 8080
 
+## Cursor Cloud specific instructions
+
+The pinned [environment](.cursor/environment.json) runs `just cloud-bootstrap`.
+It syncs all locked dependency groups and compiles bytecode with CI's Python
+3.14. Run `just fmt-check lint </dev/null` for a fast check and
+`just check </dev/null` for the full source gate.
+
+Leave `MODEM_PASSWORD` unset in Cursor Cloud. The hardware integration tests
+skip and the exporter requires a reachable modem. Use an authorized physical
+modem for integration testing and hosted CI for container publication checks.
+
 ## Environment
 
 - `MODEM_PASSWORD` - required for authenticated endpoints and integration tests.
