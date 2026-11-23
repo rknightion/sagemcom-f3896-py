@@ -34,6 +34,11 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
+    # Fork PRs do not receive repo secrets, and codacy-coverage-reporter-action hard-errors on an
+    # empty token. The `secrets` context is not available in a step-level `if:`, so resolve it to a
+    # job-level env var and gate the upload step on that.
+    env:
+      HAS_CODACY_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN != '' }}
     strategy:
       matrix:
         python-version: ["3.14"]
@@ -53,6 +58,13 @@ jobs:
         run: just setup
       - name: Run tests
         run: just test
+      - name: Upload coverage to Codacy
+        if: success() && env.HAS_CODACY_TOKEN == 'true'
+        continue-on-error: true # reporting only; the tests above are the gate
+        uses: codacy/codacy-coverage-reporter-action@89d6c85cfafaec52c72b6c5e8b2878d33104c699 # v1.3.0
+        with:
+          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+          coverage-reports: coverage.xml
       - name: Build package
         run: just build
       - name: Save artifacts
