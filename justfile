@@ -11,7 +11,7 @@ setup:
 # prepare the locked development environment for Cursor Cloud
 [group('dev')]
 cloud-bootstrap:
-    uv sync --all-groups --locked --managed-python --python 3.14 --compile-bytecode
+    uv sync --all-groups --locked --managed-python --python 3.15 --compile-bytecode
 
 # format source in place
 [group('check')]

@@ -4,7 +4,7 @@ version = "0.7.0"
 description = "Sagemcom F3896 exporter"
 authors = [{ name = "Ties de Kock", email = "ties@tiesdekock.nl" }]
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.15"
 dependencies = [
     "click>=8.1.7,<9",
     "aiohttp>=3.9.4,<4",
@@ -35,8 +35,8 @@ lint.ignore = ["E501"]
 # byte-identical to the copy in the other repos that use it. Letting this project's formatter
 # rewrite it would fork a file whose whole value is being the same everywhere.
 extend-exclude = [".claude"]
-# exporter.py must call warnings.filterwarnings() before importing prometheus_async (it emits a
-# SyntaxWarning at import on Python 3.14+), so its imports are intentionally not at top-of-file.
+# exporter.py calls warnings.filterwarnings() before importing prometheus_async (25.1.0 raises a
+# SyntaxWarning on Python 3.14+, 26.1 does not), so its imports are intentionally not at top-of-file.
 lint.per-file-ignores = { "sagemcom_f3896_client/exporter.py" = ["E402"] }
 
 [tool.pytest.ini_options]

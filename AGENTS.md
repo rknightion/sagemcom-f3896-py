@@ -92,7 +92,7 @@ which overrides this block for loop work; nothing here depends on it.
 
 The pinned [environment](.cursor/environment.json) runs `just cloud-bootstrap`.
 It syncs all locked dependency groups and compiles bytecode with CI's Python
-3.14. Run `just fmt-check lint </dev/null` for a fast check and
+3.15. Run `just fmt-check lint </dev/null` for a fast check and
 `just check </dev/null` for the full source gate.
 
 Leave `MODEM_PASSWORD` unset in Cursor Cloud. The hardware integration tests
@@ -111,10 +111,10 @@ Ruff only: `ruff` for lint, `ruff format` for formatting. Do not add black, flak
 not write config for them - `.pre-commit-config.yaml` configures the two ruff hooks and nothing else.
 
 - `line-length = 88` with `E501` ignored, in `[tool.ruff]` in `pyproject.toml`.
-- `requires-python = ">=3.14"`.
-- `exporter.py` is exempt from `E402` on purpose. It must call `warnings.filterwarnings()` before
-  importing `prometheus_async`, which otherwise emits a `SyntaxWarning` at import from its Twisted
-  module. Moving those imports to the top of the file reintroduces the warning.
+- `requires-python = ">=3.15"`.
+- `exporter.py` is exempt from `E402` on purpose. It calls `warnings.filterwarnings()` before
+  importing `prometheus_async`. That guards against the `SyntaxWarning` from the Twisted module in
+  `prometheus_async` 25.1.0; 26.1, the minimum here, compiles clean on Python 3.14 and 3.15.
 
 ## Gotchas
 

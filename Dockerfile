@@ -5,8 +5,9 @@ WORKDIR /usr/src/app
 COPY pyproject.toml README.md uv.lock ./
 COPY sagemcom_f3896_client/ sagemcom_f3896_client/
 
-RUN pip install --no-cache-dir uv \
-    && uv sync --frozen --no-dev --no-editable
+COPY --from=ghcr.io/astral-sh/uv:0.13.9@sha256:d3b601f0c7b118bc1753febf7c41cc80981df678445e0254284eecf84db79a7d /uv /usr/local/bin/uv
+
+RUN uv sync --frozen --no-dev --no-editable --no-managed-python --python 3.15
 
 FROM python:3.15-alpine@sha256:0f9552bb28711333da16915ec146f5e6bb44a7fdac9ced15dc17c2e0206346dd
 
