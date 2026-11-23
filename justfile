@@ -34,7 +34,7 @@ lint output_format="":
 [group('check')]
 [no-exit-message]
 test filter="":
-    uv run pytest --cov sagemcom_f3896_client --cov-report html -qq -o console_output_style=count -p no:sugar {{ if filter == "" { "" } else { "-k " + filter } }} tests
+    uv run pytest --cov sagemcom_f3896_client --cov-report html --cov-report xml -qq -o console_output_style=count -p no:sugar {{ if filter == "" { "" } else { "-k " + filter } }} tests
 
 # run every gate that only needs the language toolchain
 [group('check')]
