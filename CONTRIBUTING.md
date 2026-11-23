@@ -12,7 +12,7 @@ facts is edited here; changes to the rest go to that repository.
 
 <!-- vended:repo-facts:begin -->
 sagemcom-f3896-py is a Python async client, exporter and CLI for the Sagemcom F3896 cable modem. It is
-managed with `uv` and needs Python 3.14 or newer: `just setup` runs `uv sync --all-groups`, and
+managed with `uv` and needs Python 3.15 or newer: `just setup` runs `uv sync --all-groups`, and
 `just --list` shows every task. `just check` runs the Ruff lint and format check, the tests and a
 package build, and it is the gate pull request CI runs.
 
