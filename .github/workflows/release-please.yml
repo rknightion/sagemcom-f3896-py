@@ -13,6 +13,14 @@ name: release-please
 on:
   push:
     branches: [main]
+    paths-ignore:
+      # Commits that only touch CI or Renovate config cannot make a release; a release commit always changes CHANGELOG.md, so it is never filtered.
+      - ".github/**"
+      - "renovate.json"
+      - "renovate.json5"
+      - ".renovaterc"
+      - ".renovaterc.json"
+      - ".renovaterc.json5"
   workflow_dispatch:   # manual re-trigger (e.g. after a config change)
 
 permissions:
@@ -21,6 +29,7 @@ permissions:
 jobs:
   release-please:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     permissions:
       contents: write          # create the release commit, tag, and GitHub Release
       pull-requests: write      # open/update the release PR

@@ -1,14 +1,13 @@
 name: PR metadata
 
-# Pull request metadata checks, kept apart from the heavy CI workflow so that a
-# pull request body edit reruns only these jobs. The required-check sentinel is
+# Pull request metadata checks, kept apart from the heavy CI workflow. The required-check sentinel is
 # pr-metadata-success. The workflow name must differ from the heavy workflow's
 # because the hub reusables key their own cancellation groups on github.workflow.
 run-name: PR ${{ github.event.pull_request.number }} metadata
 
 on:
   pull_request:
-    types: [opened, edited, reopened, synchronize, ready_for_review]
+    types: [opened, reopened, synchronize, ready_for_review]
 
 permissions:
   contents: read

@@ -1,7 +1,6 @@
 name: Scorecard
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
   schedule:
     - cron: '43 11 * * 0'
 permissions: {}
